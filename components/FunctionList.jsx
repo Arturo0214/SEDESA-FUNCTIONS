@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card, ListGroup, Button, Form, Modal, Badge, Row, Col } from "react-bootstrap";
-import Filters from "./Filters"; // Importa el componente de filtros
+import Filters from "./Filters";
 
 function FunctionList() {
   const [functions, setFunctions] = useState([]);
@@ -10,6 +10,9 @@ function FunctionList() {
   const [selectedId, setSelectedId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
+  const [showBulkModal, setShowBulkModal] = useState(false);
+  const [bulkArea, setBulkArea] = useState("");
+  const [bulkFunctions, setBulkFunctions] = useState([{ name: "", description: "" }]);
 
   useEffect(() => {
     fetchFunctions();
@@ -67,13 +70,56 @@ function FunctionList() {
     setShowModal(true);
   };
 
-  // Obtener lista única de áreas disponibles
+  const handleAddRow = () => {
+    setBulkFunctions([...bulkFunctions, { name: "", description: "" }]);
+  };
+
+  const handleRemoveRow = (index) => {
+    const updatedFunctions = [...bulkFunctions];
+    updatedFunctions.splice(index, 1);
+    setBulkFunctions(updatedFunctions);
+  };
+
+  const handleBulkChange = (index, field, value) => {
+    const updatedFunctions = [...bulkFunctions];
+    updatedFunctions[index][field] = value;
+    setBulkFunctions(updatedFunctions);
+  };
+
+  const handleBulkUpload = async () => {
+    const functionsArray = bulkFunctions
+      .filter(func => func.name.trim() && func.description.trim())
+      .map(func => ({
+        name: func.name.trim(),
+        description: func.description.trim(),
+        area: bulkArea
+      }));
+
+    try {
+      const response = await fetch("https://sedesa-back.onrender.com/functions/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(functionsArray),
+      });
+
+      if (response.ok) {
+        fetchFunctions();
+        setShowBulkModal(false);
+        setBulkArea("");
+        setBulkFunctions([{ name: "", description: "" }]);
+      } else {
+        console.error("Error al guardar funciones masivas.");
+      }
+    } catch (error) {
+      console.error("Error en carga masiva:", error);
+    }
+  };
+
   const uniqueAreas = [...new Set(functions.map((func) => func.area))];
 
-  // Filtrar funciones según el buscador y el área seleccionada
   const filteredFunctions = functions.filter((func) => {
     return (
-      func.name.toLowerCase().includes(searchTerm) &&
+      func.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedArea === "" || func.area === selectedArea)
     );
   });
@@ -83,22 +129,35 @@ function FunctionList() {
       <Card.Body>
         <Card.Title className="text-center fw-bold mb-3">📌 Funciones de SEDESA</Card.Title>
 
-        {/* Botón para añadir función */}
-        <Button variant="success" className="mb-4 w-100" onClick={() => {
-          setCurrentFunction({ name: "", description: "", area: "" }); // Limpia el formulario
-          setEditMode(false);
-          setShowModal(true);
-        }}>
+        <Button
+          variant="success"
+          className="mb-3 w-100"
+          onClick={() => {
+            setCurrentFunction({ name: "", description: "", area: "" });
+            setEditMode(false);
+            setShowModal(true);
+          }}
+        >
           + Añadir Función
         </Button>
 
-        {/* Filtros */}
+        <Button
+          variant="primary"
+          className="mb-4 w-100"
+          onClick={() => {
+            setBulkArea("");
+            setBulkFunctions([{ name: "", description: "" }]);
+            setShowBulkModal(true);
+          }}
+        >
+          📥 Carga Masiva
+        </Button>
+
         <Filters setSearchTerm={setSearchTerm} setSelectedArea={setSelectedArea} areas={uniqueAreas} />
 
-        {/* Lista con Scroll */}
         <div style={{ maxHeight: "250px", overflowY: "auto" }}>
           <ListGroup variant="flush">
-          {filteredFunctions.map((func) => (
+            {filteredFunctions.map((func) => (
               <ListGroup.Item key={func._id} className="p-3 d-flex flex-column">
                 <Row className="align-items-center">
                   <Col md={8}>
@@ -121,7 +180,6 @@ function FunctionList() {
         </div>
       </Card.Body>
 
-      {/* Modal para Crear/Editar Función */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>{editMode ? "Editar Función" : "Añadir Función"}</Modal.Title>
@@ -161,8 +219,53 @@ function FunctionList() {
           </Button>
         </Modal.Footer>
       </Modal>
-    </Card>
-  );
-}
+
+      <Modal show={showBulkModal} onHide={() => setShowBulkModal(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Carga Masiva de Funciones</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Área</Form.Label>
+              <Form.Control type="text" value={bulkArea} onChange={(e) => setBulkArea(e.target.value)} />
+            </Form.Group>
+
+            {bulkFunctions.map((func, index) => (
+              <Row key={index} className="align-items-center mb-2">
+                <Col>
+                  <Form.Control
+                    placeholder="Nombre"
+                    value={func.name}
+                    onChange={(e) => handleBulkChange(index, "name", e.target.value)}
+                  />
+                </Col>
+                <Col>
+                  <Form.Control
+                    placeholder="Descripción"
+                    value={func.description}
+                    onChange={(e) => handleBulkChange(index, "description", e.target.value)}
+                  />
+                </Col>
+                <Col xs="auto">
+                  <Button variant="danger" onClick={() => handleRemoveRow(index)}>🗑️</Button>
+                </Col>
+              </Row>
+            ))}
+            <Button onClick={handleAddRow}>➕ Añadir</Button>
+          </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowBulkModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="success" onClick={handleBulkUpload}>
+              Guardar Todo
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </Card>
+    );
+  }
 
 export default FunctionList;
