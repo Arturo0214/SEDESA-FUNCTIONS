@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card, ListGroup, Badge, Container, Row, Col, Form } from "react-bootstrap";
+import Comments from "./Comments"
 import stringSimilarity from "string-similarity";
 
 // Función para limpiar texto
@@ -38,6 +39,8 @@ function MatchFunctionsServices({ functions, services }) {
   const [selectedAreaSEDESA, setSelectedAreaSEDESA] = useState("");
   const [searchTermSSPCDMX, setSearchTermSSPCDMX] = useState("");
   const [selectedAreaSSPCDMX, setSelectedAreaSSPCDMX] = useState("");
+  const [searchTermDuplicidades, setSearchTermDuplicidades] = useState("");
+  const [selectedAreaDuplicidades, setSelectedAreaDuplicidades] = useState("");
 
   useEffect(() => {
     autoMatch();
@@ -113,31 +116,66 @@ function MatchFunctionsServices({ functions, services }) {
     service.name.toLowerCase().includes(searchTermSSPCDMX) &&
     (selectedAreaSSPCDMX === "" || service.area === selectedAreaSSPCDMX)
   );
+  const uniqueDuplicidadesAreas = [...new Set(
+    matchedItems.flatMap(item => [item.func.area, item.service.area])
+  )];
+  const filteredMatchedItems = matchedItems.filter((match) => {
+    const matchesSearch = searchTermDuplicidades === "" ||
+      match.func.name.toLowerCase().includes(searchTermDuplicidades) ||
+      match.service.name.toLowerCase().includes(searchTermDuplicidades);
+  
+    const matchesArea = selectedAreaDuplicidades === "" ||
+      match.func.area === selectedAreaDuplicidades ||
+      match.service.area === selectedAreaDuplicidades;
+  
+    return matchesSearch && matchesArea;
+  });
+
 
   return (
     <Container className="mt-5">
       <h2 className="text-center fw-bold mb-4">🔍 Duplicidades Encontradas</h2>
+      <div className="mb-4">
+        <Form.Control
+          type="text"
+          placeholder="🔍 Buscar duplicidad..."
+          onChange={(e) => setSearchTermDuplicidades(e.target.value.toLowerCase())}
+          className="mb-2"
+        />
+        <Form.Select
+          onChange={(e) => setSelectedAreaDuplicidades(e.target.value)}
+        >
+          <option value="">📌 Filtrar por área</option>
+          {uniqueDuplicidadesAreas.map((area, index) => (
+            <option key={index} value={area}>{area}</option>
+          ))}
+        </Form.Select>
+      </div>
 
       <div style={{ maxHeight: "300px", overflowY: "auto" }} className="mb-4">
-        {matchedItems.length > 0 ? (
+        {filteredMatchedItems.length > 0 ? (
           <Row className="justify-content-center">
-            {matchedItems.map((match, index) => (
-              <Col md={6} key={index} className="mb-3">
-                <Card className="shadow-lg border-primary">
-                  <Card.Body className="text-center">
-                    <h5 className="fw-bold text-primary">
-                      <Badge bg="primary" className="me-2">SEDESA</Badge>
+            {filteredMatchedItems.map((match, index) => (
+              <Col xs={12} md={6} lg={4} key={index} className="mb-3">
+                <Card className="shadow-sm border-primary" style={{ padding: "10px", fontSize: "0.9rem" }}>
+                  <Card.Body className="text-center p-2">
+                    <h6 className="fw-bold text-primary mb-1">
+                      <Badge bg="primary" className="me-1">SEDESA</Badge>
                       {match.func.name}
-                    </h5>
-                    <p className="text-muted">{match.func.description}</p>
-                    <Badge bg="info" className="mt-2">{match.func.area}</Badge>
-                    <h5 className="fw-bold text-success">
-                      <Badge bg="success" className="me-2">SSPCDMX</Badge>
+                    </h6>
+                    <p className="text-muted small mb-1">{match.func.description}</p>
+                    <Badge bg="info" className="mb-2">{match.func.area}</Badge>
+
+                    <h6 className="fw-bold text-success mt-2 mb-1">
+                      <Badge bg="success" className="me-1">SSPCDMX</Badge>
                       {match.service.name}
-                    </h5>
-                    <p className="text-muted">{match.service.description}</p>
-                    <Badge bg="info" className="mt-2">{match.service.area}</Badge>
-                    <p className="mt-2 text-muted">🔹 Similitud: {(match.similarity * 100).toFixed(2)}%</p>
+                    </h6>
+                    <p className="text-muted small mb-1">{match.service.description}</p>
+                    <Badge bg="info" className="mb-2">{match.service.area}</Badge>
+
+                    <p className="mt-2 text-muted small">🔹 Similitud: {(match.similarity * 100).toFixed(2)}%</p>
+
+                    <Comments itemId={`${match.func._id}-${match.service._id}`} />
                   </Card.Body>
                 </Card>
               </Col>
