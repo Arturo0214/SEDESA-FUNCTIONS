@@ -15,7 +15,7 @@ function Comments({ itemId }) {
 
   const fetchComentarios = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:8000/comments/${itemId}`);
+      const { data } = await axios.get(`https://sedesa-back.onrender.com/comments/${itemId}`);
       setComentarios(data);
     } catch (error) {
       console.error("Error al obtener comentarios:", error);
@@ -29,7 +29,7 @@ function Comments({ itemId }) {
     if (!comentario.trim()) return;
 
     try {
-      const { data } = await axios.post("http://localhost:8000/comments", {
+      const { data } = await axios.post("https://sedesa-back.onrender.com/comments", {
         comentario,
         itemId,
         autor: "Miriam"
@@ -43,7 +43,7 @@ function Comments({ itemId }) {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/comments/${id}`);
+      await axios.delete(`https://sedesa-back.onrender.com/comments/${id}`);
       setComentarios(comentarios.filter((c) => c._id !== id));
     } catch (error) {
       console.error("Error al eliminar comentario:", error);
@@ -57,7 +57,7 @@ function Comments({ itemId }) {
 
   const handleUpdate = async (id) => {
     try {
-      const { data } = await axios.patch(`http://localhost:8000/comments/${id}`, {
+      const { data } = await axios.patch(`https://sedesa-back.onrender.com/comments/${id}`, {
         comentario: editedComment
       });
       setComentarios(comentarios.map((c) => (c._id === id ? data : c)));

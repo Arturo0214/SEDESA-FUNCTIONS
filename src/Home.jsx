@@ -16,7 +16,7 @@ function Home() {
   // Función para obtener funciones desde el backend
   const fetchFunctions = async () => {
     try {
-      const response = await fetch("http://localhost:8000/functions");
+      const response = await fetch("https://sedesa-back.onrender.com/functions");
       const data = await response.json();
       setFunctions(data);
     } catch (error) {
@@ -27,7 +27,7 @@ function Home() {
   // Función para obtener servicios desde el backend
   const fetchServices = async () => {
     try {
-      const response = await fetch("http://localhost:8000/services");
+      const response = await fetch("https://sedesa-back.onrender.com/services");
       const data = await response.json();
       setServices(data);
     } catch (error) {

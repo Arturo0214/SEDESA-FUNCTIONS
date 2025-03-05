@@ -17,7 +17,7 @@ function FunctionList() {
 
   const fetchFunctions = async () => {
     try {
-      const response = await fetch("http://localhost:8000/functions");
+      const response = await fetch("https://sedesa-back.onrender.com/functions");
       const data = await response.json();
       setFunctions(data);
     } catch (error) {
@@ -27,8 +27,8 @@ function FunctionList() {
 
   const handleCreateOrUpdate = async () => {
     const url = editMode
-      ? `http://localhost:8000/functions/${selectedId}`
-      : "http://localhost:8000/functions";
+      ? `https://sedesa-back.onrender.com/functions/${selectedId}`
+      : "https://sedesa-back.onrender.com/functions";
 
     const method = editMode ? "PUT" : "POST";
 
@@ -53,7 +53,7 @@ function FunctionList() {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`http://localhost:8000/functions/${id}`, { method: "DELETE" });
+      await fetch(`https://sedesa-back.onrender.com/functions/${id}`, { method: "DELETE" });
       fetchFunctions();
     } catch (error) {
       console.error("Error deleting function:", error);
