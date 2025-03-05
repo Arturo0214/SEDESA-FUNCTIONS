@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { Card, ListGroup, Button, Form, Modal, Badge, Row, Col } from "react-bootstrap";
-import Filters from "./Filters"; // Importa el componente de filtros
+import Filters from "./Filters";
 
 function ServiceList() {
   const [services, setServices] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showBulkModal, setShowBulkModal] = useState(false);
   const [currentService, setCurrentService] = useState({ name: "", description: "", area: "" });
+  const [bulkServices, setBulkServices] = useState([{ name: "", description: "" }]);
+  const [bulkArea, setBulkArea] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,7 +18,6 @@ function ServiceList() {
     fetchServices();
   }, []);
 
-  // Obtener todos los servicios
   const fetchServices = async () => {
     try {
       const response = await fetch("https://sedesa-back.onrender.com/services");
@@ -27,7 +29,6 @@ function ServiceList() {
     }
   };
 
-  // Crear o actualizar un servicio
   const handleCreateOrUpdate = async () => {
     if (!currentService.name || !currentService.description || !currentService.area) {
       alert("Todos los campos son obligatorios.");
@@ -49,7 +50,7 @@ function ServiceList() {
 
       if (!response.ok) throw new Error("Error al guardar el servicio");
 
-      fetchServices(); // Refrescar la lista de servicios
+      fetchServices();
       setShowModal(false);
       setCurrentService({ name: "", description: "", area: "" });
       setEditMode(false);
@@ -59,7 +60,51 @@ function ServiceList() {
     }
   };
 
-  // Eliminar un servicio
+  const handleBulkUpload = async () => {
+    const servicesArray = bulkServices
+      .filter(service => service.name.trim() && service.description.trim())
+      .map(service => ({
+        name: service.name.trim(),
+        description: service.description.trim(),
+        area: bulkArea
+      }));
+
+    try {
+      const response = await fetch("https://sedesa-back.onrender.com/services/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(servicesArray),
+      });
+
+      if (response.ok) {
+        fetchServices();
+        setShowBulkModal(false);
+        setBulkArea("");
+        setBulkServices([{ name: "", description: "" }]);
+      } else {
+        console.error("Error al guardar servicios masivos.");
+      }
+    } catch (error) {
+      console.error("Error en carga masiva:", error);
+    }
+  };
+
+  const handleAddRow = () => {
+    setBulkServices([...bulkServices, { name: "", description: "" }]);
+  };
+
+  const handleRemoveRow = (index) => {
+    const updatedServices = [...bulkServices];
+    updatedServices.splice(index, 1);
+    setBulkServices(updatedServices);
+  };
+
+  const handleBulkChange = (index, field, value) => {
+    const updatedServices = [...bulkServices];
+    updatedServices[index][field] = value;
+    setBulkServices(updatedServices);
+  };
+
   const handleDelete = async (id) => {
     if (!window.confirm("¿Estás seguro de que deseas eliminar este servicio?")) return;
 
@@ -74,7 +119,6 @@ function ServiceList() {
     }
   };
 
-  // Editar un servicio
   const handleEdit = (service) => {
     setCurrentService(service);
     setSelectedId(service._id);
@@ -82,10 +126,8 @@ function ServiceList() {
     setShowModal(true);
   };
 
-  // Obtener lista única de áreas disponibles
   const uniqueAreas = [...new Set(services.map((service) => service.area))];
 
-  // Filtrar servicios según el buscador y el área seleccionada
   const filteredServices = services.filter((service) => {
     return (
       service.name.toLowerCase().includes(searchTerm) &&
@@ -98,19 +140,24 @@ function ServiceList() {
       <Card.Body>
         <Card.Title className="text-center fw-bold mb-3">🩺 Funciones de SSPCDMX</Card.Title>
 
-        {/* Botón para añadir servicio */}
-        <Button variant="success" className="mb-4 w-100" onClick={() => {
-          setCurrentService({ name: "", description: "", area: "" }); // Limpia el formulario
+        <Button variant="success" className="mb-3 w-100" onClick={() => {
+          setCurrentService({ name: "", description: "", area: "" });
           setEditMode(false);
           setShowModal(true);
         }}>
-          + Añadir Función
+          + Añadir Servicio
         </Button>
 
-        {/* Filtros */}
+        <Button variant="primary" className="mb-4 w-100" onClick={() => {
+          setBulkArea("");
+          setBulkServices([{ name: "", description: "" }]);
+          setShowBulkModal(true);
+        }}>
+          📥 Carga Masiva
+        </Button>
+
         <Filters setSearchTerm={setSearchTerm} setSelectedArea={setSelectedArea} areas={uniqueAreas} />
 
-        {/* Lista con Scroll */}
         <div style={{ maxHeight: "250px", overflowY: "auto" }}>
           <ListGroup variant="flush">
             {filteredServices.map((service) => (
@@ -136,7 +183,7 @@ function ServiceList() {
         </div>
       </Card.Body>
 
-      {/* Modal para Crear/Editar Servicio */}
+      {/* Modal Crear/Editar */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>{editMode ? "Editar Servicio" : "Añadir Servicio"}</Modal.Title>
@@ -173,6 +220,54 @@ function ServiceList() {
           <Button variant="secondary" onClick={() => setShowModal(false)}>Cancelar</Button>
           <Button variant="primary" onClick={handleCreateOrUpdate}>
             {editMode ? "Actualizar" : "Guardar"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal Carga Masiva */}
+      <Modal show={showBulkModal} onHide={() => setShowBulkModal(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Carga Masiva de Servicios</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Área</Form.Label>
+              <Form.Control type="text" value={bulkArea} onChange={(e) => setBulkArea(e.target.value)} />
+            </Form.Group>
+            {bulkServices.map((service, index) => (
+              <Row key={index} className="mb-2 align-items-center">
+                <Col>
+                  <Form.Control placeholder="Nombre" value={service.name} onChange={(e) => handleBulkChange(index, "name", e.target.value)} />
+                </Col>
+                <Col>
+                <Form.Control
+                    placeholder="Descripción"
+                    value={service.description}
+                    onChange={(e) => handleBulkChange(index, "description", e.target.value)}
+                  />
+                </Col>
+                <Col xs="auto">
+                  <Button
+                    variant="danger"
+                    onClick={() => handleRemoveRow(index)}
+                  >
+                    🗑️
+                  </Button>
+                </Col>
+              </Row>
+            ))}
+            <Button variant="secondary" className="mt-3" onClick={handleAddRow}>
+              ➕ Añadir otra fila
+            </Button>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowBulkModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="success" onClick={handleBulkUpload}>
+            Guardar Todo
           </Button>
         </Modal.Footer>
       </Modal>
