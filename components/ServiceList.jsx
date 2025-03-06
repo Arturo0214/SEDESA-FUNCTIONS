@@ -20,7 +20,7 @@ function ServiceList() {
 
   const fetchServices = async () => {
     try {
-      const response = await fetch("https://sedesa-back.onrender.com/services");
+      const response = await fetch("https://water-clever-sage.glitch.me/services");
       if (!response.ok) throw new Error("Error al obtener los servicios");
       const data = await response.json();
       setServices(data);
@@ -36,8 +36,8 @@ function ServiceList() {
     }
 
     const url = editMode
-      ? `https://sedesa-back.onrender.com/services/${selectedId}`
-      : "https://sedesa-back.onrender.com/services";
+      ? `https://water-clever-sage.glitch.me/services/${selectedId}`
+      : "https://water-clever-sage.glitch.me/services";
 
     const method = editMode ? "PUT" : "POST";
 
@@ -70,7 +70,7 @@ function ServiceList() {
       }));
 
     try {
-      const response = await fetch("https://sedesa-back.onrender.com/services/bulk", {
+      const response = await fetch("https://water-clever-sage.glitch.me/services/bulk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(servicesArray),
@@ -109,7 +109,7 @@ function ServiceList() {
     if (!window.confirm("¿Estás seguro de que deseas eliminar este servicio?")) return;
 
     try {
-      const response = await fetch(`https://sedesa-back.onrender.com/services/${id}`, { method: "DELETE" });
+      const response = await fetch(`https://water-clever-sage.glitch.me/services/${id}`, { method: "DELETE" });
 
       if (!response.ok) throw new Error("Error al eliminar el servicio");
 
