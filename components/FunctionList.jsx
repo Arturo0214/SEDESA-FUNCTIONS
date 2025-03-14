@@ -20,7 +20,7 @@ function FunctionList() {
 
   const fetchFunctions = async () => {
     try {
-      const response = await fetch("https://water-clever-sage.glitch.me/functions");
+      const response = await fetch("http://localhost:8000/functions");
       const data = await response.json();
       setFunctions(data);
     } catch (error) {
@@ -30,8 +30,8 @@ function FunctionList() {
 
   const handleCreateOrUpdate = async () => {
     const url = editMode
-      ? `https://water-clever-sage.glitch.me/functions${selectedId}`
-      : "https://water-clever-sage.glitch.me/functions";
+      ? `http://localhost:8000/functions${selectedId}`
+      : "http://localhost:8000/functions";
 
     const method = editMode ? "PUT" : "POST";
 
@@ -56,7 +56,7 @@ function FunctionList() {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`https://water-clever-sage.glitch.me/functions${id}`, { method: "DELETE" });
+      await fetch(`http://localhost:8000/functions${id}`, { method: "DELETE" });
       fetchFunctions();
     } catch (error) {
       console.error("Error deleting function:", error);
@@ -96,7 +96,7 @@ function FunctionList() {
       }));
 
     try {
-      const response = await fetch("https://water-clever-sage.glitch.me/functions/bulk", {
+      const response = await fetch("http://localhost:8000/functions/bulk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(functionsArray),

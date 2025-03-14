@@ -1,0 +1,60 @@
+// Login.scss
+
+// Variables de colores
+$primary-color: #2575fc;
+$primary-dark: #1a5bb8;
+$gradient-bg: linear-gradient(to right, #6a11cb, #2575fc);
+$white: #ffffff;
+$shadow: rgba(0, 0, 0, 0.1);
+
+// Estilos generales del contenedor
+.login-container {
+  min-height: 100vh;
+  background: $gradient-bg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+// Tarjeta de login
+.login-card {
+  border-radius: 15px;
+  background-color: $white;
+  box-shadow: 0 4px 10px $shadow;
+}
+
+// Título
+.login-title {
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+// Botón de login
+.login-button {
+  font-size: 1.1rem;
+  font-weight: bold;
+  background-color: $primary-color;
+  border: none;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: $primary-dark;
+  }
+}
+
+// Estilos para dispositivos móviles
+@media (max-width: 768px) {
+  .login-card {
+    padding: 20px;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+
+  .login-button {
+    font-size: 1rem;
+  }
+}

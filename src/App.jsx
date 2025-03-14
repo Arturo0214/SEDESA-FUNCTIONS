@@ -1,13 +1,17 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./Home";
+import { Routes, Route } from "react-router-dom";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import Login from "../pages/Login/Login"
+import Register from "../pages/Register/Register"
+import ResetPassword from "../pages/ResetPassword/ResetPassword"
 
 function App() {
   return (
-    <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
-    </Router>
   );
 }
 
