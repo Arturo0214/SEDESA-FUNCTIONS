@@ -2,14 +2,18 @@ import { useState } from "react";
 import { Card, ListGroup, Badge, Container, Row, Col } from "react-bootstrap";
 import Filters from "./Filters";
 
-function UniqueFunctions({ functions, services }) {
+function UniqueFunctions({ functions, services, matches }) {
   const [searchTermSEDESA, setSearchTermSEDESA] = useState("");
   const [selectedAreaSEDESA, setSelectedAreaSEDESA] = useState("");
   const [searchTermSSPCDMX, setSearchTermSSPCDMX] = useState("");
   const [selectedAreaSSPCDMX, setSelectedAreaSSPCDMX] = useState("");
 
-  const matchedFunctionIds = new Set();
-  const matchedServiceIds = new Set();
+  // Usa los matches reales
+  const matchedFunctionIds = new Set(matches.map((m) => m.functionId));
+  const matchedServiceIds = new Set(matches.map((m) => m.serviceId));
+
+  const unmatchedFunctions = functions.filter(f => !matchedFunctionIds.has(f._id));
+  const unmatchedServices = services.filter(s => !matchedServiceIds.has(s._id));
 
   functions.forEach((func) => {
     services.forEach((service) => {
@@ -23,8 +27,6 @@ function UniqueFunctions({ functions, services }) {
     });
   });
 
-  const unmatchedFunctions = functions.filter(f => !matchedFunctionIds.has(f._id));
-  const unmatchedServices = services.filter(s => !matchedServiceIds.has(s._id));
 
   const uniqueAreasSEDESA = [...new Set(unmatchedFunctions.map(f => f.area))];
   const uniqueAreasSSPCDMX = [...new Set(unmatchedServices.map(s => s.area))];

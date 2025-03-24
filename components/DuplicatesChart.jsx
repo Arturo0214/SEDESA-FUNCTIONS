@@ -1,18 +1,47 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid, LabelList, Cell} from "recharts";
-import { Card } from "react-bootstrap";
-import { BarChart as BarChartIcon } from "lucide-react";
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    Tooltip,
+    Legend,
+    ResponsiveContainer,
+    CartesianGrid,
+    LabelList,
+    Cell,
+  } from "recharts";
+  import { Card } from "react-bootstrap";
+  import { BarChart as BarChartIcon } from "lucide-react";
   
   const DuplicatesChart = ({ functions, services, matches }) => {
-    const data = [
-      { name: "Funciones SSPCDMX", cantidad: functions.length },
-      { name: "Funciones SEDESA", cantidad: services.length },
-      { name: "Coincidencias", cantidad: matches.length },
-    ];
+    // 🔧 Ajustado a tu estructura: match.func._id y match.service._id
+    const matchedFunctionIds = new Set(matches.map((m) => String(m.func._id)));
+    const matchedServiceIds = new Set(matches.map((m) => String(m.service._id)));
   
-    const porcentaje = (
-      (matches.length / (functions.length + services.length)) *
-      100
-    ).toFixed(2);
+    // ✅ Comparación robusta asegurando que los IDs coincidan como string
+    const getDuplicatedCount = (items, idSet) =>
+      items.reduce((acc, item) => idSet.has(String(item._id)) ? acc + 1 : acc, 0);
+  
+    const duplicatedFunctions = getDuplicatedCount(functions, matchedFunctionIds);
+    const duplicatedServices = getDuplicatedCount(services, matchedServiceIds);
+  
+    const totalFunctions = functions.length;
+    const totalServices = services.length;
+    const totalOriginal = totalFunctions + totalServices;
+  
+    const uniqueFunctions = totalFunctions - duplicatedFunctions;
+    const uniqueServices = totalServices - duplicatedServices;
+  
+    const duplicatedTotal = duplicatedFunctions + duplicatedServices;
+    const uniqueTotal = uniqueFunctions + uniqueServices;
+  
+    const porcentajeDuplicadas = ((duplicatedTotal / totalOriginal) * 100).toFixed(2);
+    const porcentajeUnicas = ((uniqueTotal / totalOriginal) * 100).toFixed(2);
+  
+    const data = [
+      { name: "Duplicadas", cantidad: duplicatedTotal },
+      { name: "Únicas", cantidad: uniqueTotal },
+    ];
   
     return (
       <Card className="shadow-sm border-0 rounded">
@@ -20,9 +49,13 @@ import { BarChart as BarChartIcon } from "lucide-react";
           <div className="text-center mb-4">
             <BarChartIcon className="text-primary" size={28} />
             <h5 className="fw-bold mt-2">Porcentaje de Duplicidades</h5>
-            <p className="text-muted">
-              Coincidencias encontradas:{" "}
-              <span className="fw-bold text-success">{porcentaje}%</span>
+            <p className="text-muted mb-1">
+              🔁 Duplicadas:{" "}
+              <span className="fw-bold text-danger">{porcentajeDuplicadas}%</span> | ✅ Únicas:{" "}
+              <span className="fw-bold text-success">{porcentajeUnicas}%</span>
+            </p>
+            <p className="text-muted" style={{ fontSize: "0.85rem" }}>
+              ({duplicatedFunctions} funciones + {duplicatedServices} servicios duplicados)
             </p>
           </div>
   
@@ -37,7 +70,7 @@ import { BarChart as BarChartIcon } from "lucide-react";
                 {data.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
-                    fill={["#0d6efd", "#20c997", "#ffc107"][index]}
+                    fill={["#dc3545", "#198754"][index]} // rojo duplicadas, verde únicas
                   />
                 ))}
                 <LabelList dataKey="cantidad" position="top" fontSize={12} />

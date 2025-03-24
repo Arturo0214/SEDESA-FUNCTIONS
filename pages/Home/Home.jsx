@@ -91,8 +91,8 @@ const Home = () => {
       case 'match':
         return <MatchFunctionsServices matches={matches} />;
       case 'unique':
-        return <UniqueFunctions functions={functions} services={services} />;
-        case 'chart':
+        return <UniqueFunctions functions={functions} services={services} matches={matches} />;
+      case 'chart':
         return <DuplicatesChart functions={functions} services={services} matches={matches} />;
       default:
         return <p>Selecciona una pestaña</p>;
