@@ -10,6 +10,8 @@ import UniqueFunctions from "../../components/UniqueFunctions";
 import Swal from 'sweetalert2';
 import { LogOut } from 'lucide-react';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ const Home = () => {
 
   const fetchFunctions = async () => {
     try {
-      const res = await fetch('https://water-clever-sage.glitch.me/functions');
+      const res = await fetch(`${API_URL}functions`);
       const data = await res.json();
       setFunctions(data);
     } catch (err) {
@@ -41,7 +43,7 @@ const Home = () => {
 
   const fetchServices = async () => {
     try {
-      const res = await fetch('https://water-clever-sage.glitch.me/services');
+      const res = await fetch(`${API_URL}services`);
       const data = await res.json();
       setServices(data);
     } catch (err) {
@@ -51,7 +53,7 @@ const Home = () => {
 
   const fetchMatches = async () => {
     try {
-      const res = await fetch('https://water-clever-sage.glitch.me/matches');
+      const res = await fetch(`${API_URL}matches`);
       const data = await res.json();
       setMatches(data);
     } catch (err) {

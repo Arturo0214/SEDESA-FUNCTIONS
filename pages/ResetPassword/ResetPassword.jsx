@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import './ResetPassword.scss';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      const response = await axios.put(`https://duplicidades-sedesa.netlify.app/users/reset-password/${token}`, { password });
+      const response = await axios.put(`${API_URL}users/reset-password/${token}`, { password });
 
       Swal.fire('Éxito', response.data.message, 'success');
 

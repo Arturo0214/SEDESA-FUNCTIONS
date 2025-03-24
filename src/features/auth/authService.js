@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = "https://water-clever-sage.glitch.me/"
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Función para registrar usuario
 const register = async (userData) => { 

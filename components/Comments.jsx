@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Form, Button, ListGroup, Spinner, InputGroup } from "react-bootstrap";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function Comments({ itemId }) {
   const [comentario, setComentario] = useState("");
   const [comentarios, setComentarios] = useState([]);
@@ -15,7 +17,7 @@ function Comments({ itemId }) {
 
   const fetchComentarios = async () => {
     try {
-      const { data } = await axios.get(`https://water-clever-sage.glitch.me/comments/${itemId}`);
+      const { data } = await axios.get(`${API_URL}comments/${itemId}`);
       setComentarios(data);
     } catch (error) {
       console.error("Error al obtener comentarios:", error);
@@ -29,7 +31,7 @@ function Comments({ itemId }) {
     if (!comentario.trim()) return;
 
     try {
-      const { data } = await axios.post("https://water-clever-sage.glitch.me/comments", {
+      const { data } = await axios.post(`${API_URL}comments/`, {
         comentario,
         itemId,
         autor: "Miriam"
@@ -43,7 +45,7 @@ function Comments({ itemId }) {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://sedesa-back.onrender.com/comments/${id}`);
+      await axios.delete(`${API_URL}comments/${id}`);
       setComentarios(comentarios.filter((c) => c._id !== id));
     } catch (error) {
       console.error("Error al eliminar comentario:", error);
@@ -57,7 +59,7 @@ function Comments({ itemId }) {
 
   const handleUpdate = async (id) => {
     try {
-      const { data } = await axios.patch(`https://sedesa-back.onrender.com/comments/${id}`, {
+      const { data } = await axios.patch(`${API_URL}comments/${id}`, {
         comentario: editedComment
       });
       setComentarios(comentarios.map((c) => (c._id === id ? data : c)));

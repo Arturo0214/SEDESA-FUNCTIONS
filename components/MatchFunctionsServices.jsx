@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { Card, Badge, Container, Row, Col, Form, Pagination } from "react-bootstrap";
 import Comments from "./Comments";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function similarityBadge(similarity) {
   const percentage = similarity * 100;
   if (percentage >= 80) return <Badge bg="danger">🔴 Alta ({percentage.toFixed(2)}%)</Badge>;
@@ -19,7 +21,7 @@ function MatchFunctionsServices() {
   const itemsPerPage = 9;
 
   useEffect(() => {
-    fetch("https://water-clever-sage.glitch.me/matches")
+    fetch(`${API_URL}matches`)
       .then((res) => res.json())
       .then(setMatchedItems)
       .catch((err) => console.error(err));
@@ -121,7 +123,7 @@ function MatchFunctionsServices() {
       </Row>
 
   {/* Contenedor con scroll para cards + sticky pagination */}
-<div style={{ maxHeight: "520px", overflowY: "auto", position: "relative" }}>
+<div style={{ maxHeight: "600px", overflowY: "auto", position: "relative" }}>
   <Row className="justify-content-center">
     {paginatedItems.map((match, index) => (
       <Col xs={12} md={6} lg={4} key={index} className="mb-3">

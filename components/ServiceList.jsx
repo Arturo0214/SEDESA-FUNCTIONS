@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Card, Button, Badge, Row, Col } from "react-bootstrap";
 import Filters from "./Filters";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function ServiceList() {
   const [services, setServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,7 +15,7 @@ function ServiceList() {
 
   const fetchServices = async () => {
     try {
-      const response = await fetch("https://water-clever-sage.glitch.me/services");
+      const response = await fetch(`${API_URL}services`);
       if (!response.ok) throw new Error("Error al obtener los servicios");
       const data = await response.json();
       setServices(data);
@@ -26,7 +28,7 @@ function ServiceList() {
     if (!window.confirm("¿Estás seguro de que deseas eliminar este servicio?")) return;
 
     try {
-      const response = await fetch(`https://water-clever-sage.glitch.me/services${id}`, { method: "DELETE" });
+      const response = await fetch(`${API_URL}services/${id}`, { method: "DELETE" });
 
       if (!response.ok) throw new Error("Error al eliminar el servicio");
 
@@ -57,7 +59,7 @@ function ServiceList() {
 
         <Filters setSearchTerm={setSearchTerm} setSelectedArea={setSelectedArea} areas={uniqueAreas} />
 
-        <Row className="g-2 mt-3" style={{ maxHeight: "450px", overflowY: "auto" }}>
+        <Row className="g-2 mt-3" style={{ maxHeight: "600px", overflowY: "auto" }}>
           {filteredServices.map((service) => (
             <Col key={service._id} xs={12} sm={6} md={4} lg={3}>
               <Card className="h-100 shadow-sm">

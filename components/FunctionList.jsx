@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Card, Button, Badge, Row, Col } from "react-bootstrap";
 import Filters from "./Filters";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function FunctionList() {
   const [functions, setFunctions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,7 +15,7 @@ function FunctionList() {
 
   const fetchFunctions = async () => {
     try {
-      const response = await fetch("https://water-clever-sage.glitch.me/functions/");
+      const response = await fetch(`${API_URL}functions`);
       const data = await response.json();
       setFunctions(data);
     } catch (error) {
@@ -23,7 +25,7 @@ function FunctionList() {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`https://water-clever-sage.glitch.me/functions/${id}`, { method: "DELETE" });
+      await fetch(`${API_URL}functions/${id}`, { method: "DELETE" });
       fetchFunctions();
     } catch (error) {
       console.error("Error deleting function:", error);
@@ -51,7 +53,7 @@ function FunctionList() {
 
         <Filters setSearchTerm={setSearchTerm} setSelectedArea={setSelectedArea} areas={uniqueAreas} />
 
-        <Row className="g-2 mt-3" style={{ maxHeight: "450px", overflowY: "auto" }}>
+        <Row className="g-2 mt-3" style={{ maxHeight: "600px", overflowY: "auto" }}>
           {filteredFunctions.map((func) => (
             <Col key={func._id} xs={12} sm={6} md={4} lg={3}>
               <Card className="h-100 shadow-sm">
