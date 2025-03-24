@@ -19,7 +19,7 @@ function MatchFunctionsServices() {
   const itemsPerPage = 9;
 
   useEffect(() => {
-    fetch("http://localhost:8000/matches")
+    fetch("https://water-clever-sage.glitch.me/matches")
       .then((res) => res.json())
       .then(setMatchedItems)
       .catch((err) => console.error(err));

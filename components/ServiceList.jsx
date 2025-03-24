@@ -13,7 +13,7 @@ function ServiceList() {
 
   const fetchServices = async () => {
     try {
-      const response = await fetch("http://localhost:8000/services");
+      const response = await fetch("https://water-clever-sage.glitch.me/services");
       if (!response.ok) throw new Error("Error al obtener los servicios");
       const data = await response.json();
       setServices(data);
@@ -26,7 +26,7 @@ function ServiceList() {
     if (!window.confirm("¿Estás seguro de que deseas eliminar este servicio?")) return;
 
     try {
-      const response = await fetch(`http://localhost:8000/services${id}`, { method: "DELETE" });
+      const response = await fetch(`https://water-clever-sage.glitch.me/services${id}`, { method: "DELETE" });
 
       if (!response.ok) throw new Error("Error al eliminar el servicio");
 

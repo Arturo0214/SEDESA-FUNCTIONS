@@ -13,7 +13,7 @@ function FunctionList() {
 
   const fetchFunctions = async () => {
     try {
-      const response = await fetch("http://localhost:8000/functions");
+      const response = await fetch("https://water-clever-sage.glitch.me/functions/");
       const data = await response.json();
       setFunctions(data);
     } catch (error) {
@@ -23,7 +23,7 @@ function FunctionList() {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`http://localhost:8000/functions${id}`, { method: "DELETE" });
+      await fetch(`https://water-clever-sage.glitch.me/functions/${id}`, { method: "DELETE" });
       fetchFunctions();
     } catch (error) {
       console.error("Error deleting function:", error);
