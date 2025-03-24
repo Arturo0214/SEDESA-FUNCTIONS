@@ -38,7 +38,7 @@ const Login = () => {
         timer: 2000,
         showConfirmButton: false
       });
-      setTimeout(() => navigate('/home'), 2000);
+      setTimeout(() => navigate('/'), 2000);
     }
     dispatch(reset());
   }, [error, isSuccess, message, navigate, dispatch]);
