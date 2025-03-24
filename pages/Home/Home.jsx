@@ -48,6 +48,15 @@ const Home = () => {
     }
   };
 
+  const fetchMatches = async () => {
+    try {
+      const res = await fetch('https://water-clever-sage.glitch.me/matches');
+      const data = await res.json();
+      setServices(data);
+    } catch (err) {
+      console.error('Error fetching matches:', err);
+    }
+  };
   const handleLogout = () => {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -74,7 +83,7 @@ const Home = () => {
       case 'ssp':
         return <ServiceList services={services} setServices={setServices} fetchServices={fetchServices} />;
       case 'match':
-        return <MatchFunctionsServices functions={functions} services={services} />;
+        return <MatchFunctionsServices matches={matches}/>;
       case 'unique':
         return <UniqueFunctions functions={functions} services={services} />;
       default:
