@@ -15,7 +15,7 @@ function Comments({ itemId }) {
 
   const fetchComentarios = async () => {
     try {
-      const { data } = await axios.get(`https://sedesa-back.onrender.com/comments/${itemId}`);
+      const { data } = await axios.get(`https://water-clever-sage.glitch.me/comments/${itemId}`);
       setComentarios(data);
     } catch (error) {
       console.error("Error al obtener comentarios:", error);
@@ -29,7 +29,7 @@ function Comments({ itemId }) {
     if (!comentario.trim()) return;
 
     try {
-      const { data } = await axios.post("https://sedesa-back.onrender.com/comments", {
+      const { data } = await axios.post("https://water-clever-sage.glitch.me/comments", {
         comentario,
         itemId,
         autor: "Miriam"
