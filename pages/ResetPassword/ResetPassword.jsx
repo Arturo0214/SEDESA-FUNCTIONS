@@ -28,7 +28,7 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      const response = await axios.put(`http://localhost:8000/users/reset-password/${token}`, { password });
+      const response = await axios.put(`https://duplicidades-sedesa.netlify.app/users/reset-password/${token}`, { password });
 
       Swal.fire('Éxito', response.data.message, 'success');
 
