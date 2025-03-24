@@ -47,10 +47,10 @@ export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
 
 export const requestPasswordReset = createAsyncThunk("auth/requestPasswordReset", async ({ email }, thunkAPI) => {
   try {
-      console.log("🔹 Enviando solicitud a:", "http://localhost:8000/users/reset-password");
+      console.log("🔹 Enviando solicitud a:", "https://water-clever-sage.glitch.me/users/reset-password");
       console.log("🔹 Email enviado:", email);
 
-      const response = await axios.post("http://localhost:8000/users/reset-password", { email: email.trim() });
+      const response = await axios.post("https://water-clever-sage.glitch.me/users/reset-password", { email: email.trim() });
 
       console.log("✅ Respuesta recibida:", response.data);
       return response.data;
