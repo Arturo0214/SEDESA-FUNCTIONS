@@ -15,7 +15,7 @@ function MatchFunctionsServices() {
   const [matchedItems, setMatchedItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
-  const [similarityFilter, setSimilarityFilter] = useState(""); // 👈 nuevo filtro
+  const [similarityFilter, setSimilarityFilter] = useState("");
   const [sortOrder, setSortOrder] = useState("desc");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
@@ -123,7 +123,7 @@ function MatchFunctionsServices() {
       </Row>
 
   {/* Contenedor con scroll para cards + sticky pagination */}
-<div style={{ maxHeight: "600px", overflowY: "auto", position: "relative" }}>
+<div style={{ maxHeight: "550px", overflowY: "auto", position: "relative" }}>
   <Row className="justify-content-center">
     {paginatedItems.map((match, index) => (
       <Col xs={12} md={6} lg={4} key={index} className="mb-3">

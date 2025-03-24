@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector } from 'react-redux';
 import axios from "axios";
 import { Form, Button, ListGroup, Spinner, InputGroup } from "react-bootstrap";
 
@@ -10,7 +11,7 @@ function Comments({ itemId }) {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState(null);
   const [editedComment, setEditedComment] = useState("");
-
+  const { user } = useSelector((state) => state.auth);
   useEffect(() => {
     fetchComentarios();
   }, []);
@@ -30,11 +31,16 @@ function Comments({ itemId }) {
     e.preventDefault();
     if (!comentario.trim()) return;
 
+    if (!user) {
+      alert("Debes iniciar sesión para comentar.");
+      return;
+    }
+
     try {
       const { data } = await axios.post(`${API_URL}comments/`, {
         comentario,
         itemId,
-        autor: "Miriam"
+        autor: user?.name || user?.username || "Usuario"
       });
       setComentarios([data, ...comentarios]);
       setComentario("");

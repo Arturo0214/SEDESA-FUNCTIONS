@@ -1,4 +1,3 @@
-// UniqueFunctionsList.jsx
 import { useState } from "react";
 import { Card, ListGroup, Badge, Container, Row, Col } from "react-bootstrap";
 import Filters from "./Filters";
@@ -43,17 +42,33 @@ function UniqueFunctions({ functions, services }) {
   return (
     <Container className="mt-4 mb-5">
       <Row>
+        {/* Funciones SEDESA */}
         <Col md={6}>
-          <Card className="shadow">
+          <Card className="shadow border-0">
             <Card.Body>
-              <Card.Title className="text-center text-danger fw-bold">⚠️ Funciones de SEDESA Únicas</Card.Title>
-              <Filters setSearchTerm={setSearchTermSEDESA} setSelectedArea={setSelectedAreaSEDESA} areas={uniqueAreasSEDESA} />
-              <div style={{ maxHeight: "300px", overflowY: "auto" }}>
+              <Card.Title className="text-center text-danger fw-bold">
+                ⚠️ Funciones de SEDESA Únicas
+              </Card.Title>
+              <Filters
+                setSearchTerm={setSearchTermSEDESA}
+                setSelectedArea={setSelectedAreaSEDESA}
+                areas={uniqueAreasSEDESA}
+              />
+              <div style={{ maxHeight: "500px", overflowY: "auto" }}>
                 <ListGroup variant="flush">
                   {filteredFunctions.map((func) => (
-                    <ListGroup.Item key={func._id}>
-                      <strong>{func.name}</strong> <br />
-                      <Badge bg="info">{func.area}</Badge>
+                    <ListGroup.Item
+                      key={func._id}
+                      className="mb-3 p-3 rounded border shadow-sm"
+                    >
+                      <div className="d-flex justify-content-between align-items-start">
+                        <div>
+                          <h6 className="fw-semibold mb-1">{func.name}</h6>
+                          <Badge bg="danger" className="mt-1">
+                            {func.area}
+                          </Badge>
+                        </div>
+                      </div>
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
@@ -62,17 +77,33 @@ function UniqueFunctions({ functions, services }) {
           </Card>
         </Col>
 
+        {/* Funciones SSPCDMX */}
         <Col md={6}>
-          <Card className="shadow">
+          <Card className="shadow border-0">
             <Card.Body>
-              <Card.Title className="text-center text-warning fw-bold">⚠️ Funciones de SSPCDMX Únicas</Card.Title>
-              <Filters setSearchTerm={setSearchTermSSPCDMX} setSelectedArea={setSelectedAreaSSPCDMX} areas={uniqueAreasSSPCDMX} />
-              <div style={{ maxHeight: "300px", overflowY: "auto" }}>
+              <Card.Title className="text-center text-warning fw-bold">
+                ⚠️ Funciones de SSPCDMX Únicas
+              </Card.Title>
+              <Filters
+                setSearchTerm={setSearchTermSSPCDMX}
+                setSelectedArea={setSelectedAreaSSPCDMX}
+                areas={uniqueAreasSSPCDMX}
+              />
+              <div style={{ maxHeight: "500px", overflowY: "auto" }}>
                 <ListGroup variant="flush">
                   {filteredServices.map((service) => (
-                    <ListGroup.Item key={service._id}>
-                      <strong>{service.name}</strong> <br />
-                      <Badge bg="info">{service.area}</Badge>
+                    <ListGroup.Item
+                      key={service._id}
+                      className="mb-3 p-3 rounded border shadow-sm"
+                    >
+                      <div className="d-flex justify-content-between align-items-start">
+                        <div>
+                          <h6 className="fw-semibold mb-1">{service.name}</h6>
+                          <Badge bg="warning" text="dark" className="mt-1">
+                            {service.area}
+                          </Badge>
+                        </div>
+                      </div>
                     </ListGroup.Item>
                   ))}
                 </ListGroup>

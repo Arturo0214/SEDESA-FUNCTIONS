@@ -7,6 +7,7 @@ import FunctionList from '../../components/FunctionList';
 import ServiceList from '../../components/ServiceList';
 import MatchFunctionsServices from '../../components/MatchFunctionsServices';
 import UniqueFunctions from "../../components/UniqueFunctions";
+import DuplicatesChart from '../../components/DuplicatesChart';
 import Swal from 'sweetalert2';
 import { LogOut } from 'lucide-react';
 
@@ -21,6 +22,7 @@ const Home = () => {
   const [functions, setFunctions] = useState([]);
   const [services, setServices] = useState([]);
   const [matches, setMatches] = useState([]);
+
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -60,6 +62,7 @@ const Home = () => {
       console.error('Error fetching matches:', err);
     }
   };
+
   const handleLogout = () => {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -86,22 +89,39 @@ const Home = () => {
       case 'ssp':
         return <ServiceList services={services} setServices={setServices} fetchServices={fetchServices} />;
       case 'match':
-        return <MatchFunctionsServices matches={matches}/>;
+        return <MatchFunctionsServices matches={matches} />;
       case 'unique':
         return <UniqueFunctions functions={functions} services={services} />;
+        case 'chart':
+        return <DuplicatesChart functions={functions} services={services} matches={matches} />;
       default:
         return <p>Selecciona una pestaña</p>;
     }
   };
 
   return (
-    <Container fluid className="p-0" style={{ height: '100vh', fontFamily: 'system-ui' }}>
+    <Container
+      fluid
+      className="p-0"
+      style={{ height: '100vh', overflow: 'hidden', fontFamily: 'system-ui' }}
+    >
       <Row className="g-0" style={{ height: '100%' }}>
         {/* Sidebar estilo Finder */}
-        <Col style={{ width: '30%', maxWidth: '250px', borderRight: '1px solid #dee2e6', backgroundColor: '#f8f9fa' }}>
+        <Col
+          style={{
+            width: '30%',
+            maxWidth: '250px',
+            borderRight: '1px solid #dee2e6',
+            backgroundColor: '#f8f9fa'
+          }}
+        >
           <div className="p-3 border-bottom" style={{ backgroundColor: '#e9ecef' }}>
-            <strong style={{ fontSize: '14px' }}>Bienvenido, {user?.name || 'Usuario'}</strong>
-            <div style={{ fontSize: '12px', color: '#6c757d' }}>Al sistema de duplicidades</div>
+            <strong style={{ fontSize: '14px' }}>
+              Bienvenido, {user?.name || 'Usuario'}
+            </strong>
+            <div style={{ fontSize: '12px', color: '#6c757d' }}>
+              Al sistema de duplicidades
+            </div>
           </div>
 
           <ListGroup variant="flush">
@@ -137,8 +157,15 @@ const Home = () => {
             >
               Funciones Únicas
             </ListGroup.Item>
+            <ListGroup.Item
+              action
+              active={activeTab === 'chart'}
+              onClick={() => setActiveTab('chart')}
+              style={{ fontSize: '14px' }}
+              >
+              Porcentaje de Duplicidades
+            </ListGroup.Item>
           </ListGroup>
-
           <div className="p-3">
             <Button variant="outline-danger" size="sm" onClick={handleLogout} className="w-100 mt-3">
               <LogOut size={16} className="me-2" />
@@ -146,9 +173,14 @@ const Home = () => {
             </Button>
           </div>
         </Col>
-
-        {/* Contenido principal */}
-        <Col style={{ width: '70%' }} className="p-4">
+        <Col
+          style={{
+            width: '70%',
+            overflowY: 'auto',
+            height: '100vh',
+            padding: '20px'
+          }}
+        >
           <Card style={{ height: '100%', border: 'none' }}>
             <Card.Body>{renderContent()}</Card.Body>
           </Card>
