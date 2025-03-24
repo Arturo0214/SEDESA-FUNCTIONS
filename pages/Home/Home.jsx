@@ -30,7 +30,7 @@ const Home = () => {
 
   const fetchFunctions = async () => {
     try {
-      const res = await fetch('http://localhost:8000/functions');
+      const res = await fetch('https://water-clever-sage.glitch.me/functions');
       const data = await res.json();
       setFunctions(data);
     } catch (err) {
@@ -40,7 +40,7 @@ const Home = () => {
 
   const fetchServices = async () => {
     try {
-      const res = await fetch('http://localhost:8000/services');
+      const res = await fetch('https://water-clever-sage.glitch.me/services');
       const data = await res.json();
       setServices(data);
     } catch (err) {
