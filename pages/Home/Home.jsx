@@ -18,13 +18,14 @@ const Home = () => {
   const [activeTab, setActiveTab] = useState('ssp');
   const [functions, setFunctions] = useState([]);
   const [services, setServices] = useState([]);
-
+  const [matches, setMatches] = useState([]);
   useEffect(() => {
     if (!user) {
       navigate('/login');
     } else {
       fetchFunctions();
       fetchServices();
+      fetchMatches();
     }
   }, [user, navigate]);
 
@@ -52,7 +53,7 @@ const Home = () => {
     try {
       const res = await fetch('https://water-clever-sage.glitch.me/matches');
       const data = await res.json();
-      setServices(data);
+      setMatches(data);
     } catch (err) {
       console.error('Error fetching matches:', err);
     }
