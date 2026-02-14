@@ -94,7 +94,7 @@ function FunctionList() {
         <Row className="g-2 mt-2">
           {paginatedItems.map((func) => (
             <Col key={func._id} xs={12} md={6} lg={4} className="mb-3">
-              <Card className="h-100 shadow-sm border-primary" style={{ padding: "10px", fontSize: "0.9rem" }}>
+              <Card className="function-card">
                 <Card.Body className="d-flex flex-column">
                   <h6 className="fw-bold text-primary">{func.name}</h6>
                   <p className="text-muted small flex-grow-1">{func.description}</p>

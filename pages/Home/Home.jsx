@@ -10,6 +10,7 @@ import UniqueFunctions from "../../components/UniqueFunctions";
 import DuplicatesChart from '../../components/DuplicatesChart';
 import Swal from 'sweetalert2';
 import { LogOut } from 'lucide-react';
+import './Home.scss';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -100,36 +101,24 @@ const Home = () => {
   };
 
   return (
-    <Container
-      fluid
-      className="p-0"
-      style={{ height: '100vh', overflow: 'hidden', fontFamily: 'system-ui' }}
-    >
-      <Row className="g-0" style={{ height: '100%' }}>
-        {/* Sidebar estilo Finder */}
-        <Col
-          style={{
-            width: '30%',
-            maxWidth: '250px',
-            borderRight: '1px solid #dee2e6',
-            backgroundColor: '#f8f9fa'
-          }}
-        >
-          <div className="p-3 border-bottom" style={{ backgroundColor: '#e9ecef' }}>
-            <strong style={{ fontSize: '14px' }}>
+    <Container fluid className="app-container p-0">
+      <Row className="g-0 h-100">
+        {/* Sidebar */}
+        <Col className="sidebar p-0">
+          <div className="sidebar-header">
+            <strong>
               Bienvenido, {user?.name || 'Usuario'}
             </strong>
-            <div style={{ fontSize: '12px', color: '#6c757d' }}>
+            <div className="subtitle">
               Al sistema de duplicidades
             </div>
           </div>
 
-          <ListGroup variant="flush">
+          <ListGroup variant="flush" className="sidebar-list">
             <ListGroup.Item
               action
               active={activeTab === 'ssp'}
               onClick={() => setActiveTab('ssp')}
-              style={{ fontSize: '14px' }}
             >
               Funciones SSPCDMX
             </ListGroup.Item>
@@ -137,7 +126,6 @@ const Home = () => {
               action
               active={activeTab === 'sedesa'}
               onClick={() => setActiveTab('sedesa')}
-              style={{ fontSize: '14px' }}
             >
               Funciones SEDESA
             </ListGroup.Item>
@@ -145,7 +133,6 @@ const Home = () => {
               action
               active={activeTab === 'match'}
               onClick={() => setActiveTab('match')}
-              style={{ fontSize: '14px' }}
             >
               Match de Ambas
             </ListGroup.Item>
@@ -153,7 +140,6 @@ const Home = () => {
               action
               active={activeTab === 'unique'}
               onClick={() => setActiveTab('unique')}
-              style={{ fontSize: '14px' }}
             >
               Funciones Únicas
             </ListGroup.Item>
@@ -161,29 +147,25 @@ const Home = () => {
               action
               active={activeTab === 'chart'}
               onClick={() => setActiveTab('chart')}
-              style={{ fontSize: '14px' }}
-              >
+            >
               Porcentaje de Duplicidades
             </ListGroup.Item>
           </ListGroup>
-          <div className="p-3">
-            <Button variant="outline-danger" size="sm" onClick={handleLogout} className="w-100 mt-3">
+          <div className="sidebar-footer">
+            <Button variant="outline-danger" size="sm" onClick={handleLogout} className="btn-logout w-100">
               <LogOut size={16} className="me-2" />
               Cerrar sesión
             </Button>
           </div>
         </Col>
-        <Col
-          style={{
-            width: '70%',
-            overflowY: 'auto',
-            height: '100vh',
-            padding: '20px'
-          }}
-        >
-          <Card style={{ height: '100%', border: 'none' }}>
-            <Card.Body>{renderContent()}</Card.Body>
-          </Card>
+
+        {/* Main Content */}
+        <Col className="main-content p-0">
+          <div className="main-content-wrapper">
+            <Card className="main-content-card">
+              <Card.Body>{renderContent()}</Card.Body>
+            </Card>
+          </div>
         </Col>
       </Row>
     </Container>
