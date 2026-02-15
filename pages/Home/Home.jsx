@@ -10,7 +10,7 @@ import UniqueFunctions from "../../components/UniqueFunctions";
 import DuplicatesChart from '../../components/DuplicatesChart';
 import Swal from 'sweetalert2';
 import { LogOut } from 'lucide-react';
-import './Home.scss';
+
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -101,23 +101,24 @@ const Home = () => {
   };
 
   return (
-    <Container fluid className="app-container p-0">
+    <Container fluid className="vh-100 overflow-hidden bg-light p-0">
       <Row className="g-0 h-100">
         {/* Sidebar */}
-        <Col className="sidebar p-0">
-          <div className="sidebar-header">
-            <strong>
+        <Col xs="auto" className="d-flex flex-column bg-dark text-white border-end border-secondary p-0 shadow" style={{ width: '280px', minWidth: '280px' }}>
+          <div className="p-4 border-bottom border-secondary bg-opacity-10 bg-white">
+            <strong className="d-block fs-5 fw-bold text-white mb-1">
               Bienvenido, {user?.name || 'Usuario'}
             </strong>
-            <div className="subtitle">
+            <div className="small text-white-50 text-uppercase fw-medium">
               Al sistema de duplicidades
             </div>
           </div>
 
-          <ListGroup variant="flush" className="sidebar-list">
+          <ListGroup variant="flush" className="flex-grow-1 overflow-auto py-3">
             <ListGroup.Item
               action
               active={activeTab === 'ssp'}
+              className="border-0 py-3 px-4 bg-transparent text-white-50"
               onClick={() => setActiveTab('ssp')}
             >
               Funciones SSPCDMX
@@ -125,6 +126,7 @@ const Home = () => {
             <ListGroup.Item
               action
               active={activeTab === 'sedesa'}
+              className="border-0 py-3 px-4 bg-transparent text-white-50"
               onClick={() => setActiveTab('sedesa')}
             >
               Funciones SEDESA
@@ -132,6 +134,7 @@ const Home = () => {
             <ListGroup.Item
               action
               active={activeTab === 'match'}
+              className="border-0 py-3 px-4 bg-transparent text-white-50"
               onClick={() => setActiveTab('match')}
             >
               Match de Ambas
@@ -139,6 +142,7 @@ const Home = () => {
             <ListGroup.Item
               action
               active={activeTab === 'unique'}
+              className="border-0 py-3 px-4 bg-transparent text-white-50"
               onClick={() => setActiveTab('unique')}
             >
               Funciones Únicas
@@ -146,13 +150,14 @@ const Home = () => {
             <ListGroup.Item
               action
               active={activeTab === 'chart'}
+              className="border-0 py-3 px-4 bg-transparent text-white-50"
               onClick={() => setActiveTab('chart')}
             >
-              Porcentaje de Duplicidades
+              Reportes y Estadísticas
             </ListGroup.Item>
           </ListGroup>
-          <div className="sidebar-footer">
-            <Button variant="outline-danger" size="sm" onClick={handleLogout} className="btn-logout w-100">
+          <div className="p-3 border-top border-secondary bg-opacity-10 bg-black">
+            <Button variant="outline-danger" size="sm" onClick={handleLogout} className="w-100 d-flex align-items-center justify-content-center py-2 fw-medium">
               <LogOut size={16} className="me-2" />
               Cerrar sesión
             </Button>
@@ -160,10 +165,10 @@ const Home = () => {
         </Col>
 
         {/* Main Content */}
-        <Col className="main-content p-0">
-          <div className="main-content-wrapper">
-            <Card className="main-content-card">
-              <Card.Body>{renderContent()}</Card.Body>
+        <Col className="d-flex flex-column h-100 overflow-hidden bg-light p-0">
+          <div className="flex-grow-1 overflow-auto p-4 w-100">
+            <Card className="border-0 bg-transparent shadow-none w-100">
+              <Card.Body className="p-0">{renderContent()}</Card.Body>
             </Card>
           </div>
         </Col>

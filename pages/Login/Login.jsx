@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
 import { login, reset } from '../../src/features/auth/authSlice';
 import Swal from 'sweetalert2';
-import './Login.scss';
+
 import ResetPassword from '../../components/ResetPassword/ResetPassword';
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const { isLoading, isSuccess, error, message } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
@@ -70,46 +70,46 @@ const Login = () => {
 
   return (
     <>
-      <Container fluid className="login-container d-flex justify-content-center align-items-center">
+      <Container fluid className="vh-100 d-flex justify-content-center align-items-center bg-light">
         <Row className="w-100 justify-content-center">
           <Col xs={12} sm={10} md={8} lg={5} xl={4}>
-            <Card className="login-card p-4 shadow-lg">
+            <Card className="p-4 shadow-lg border-0">
               <Card.Body>
-                <h2 className="text-center mb-4 login-title">Inicia Sesión</h2>
+                <h2 className="text-center mb-4 fw-bold">Inicia Sesión</h2>
                 {error && <Alert variant="danger">{message}</Alert>}
                 <Form onSubmit={onSubmit}>
                   <Form.Group controlId="formBasicEmail" className="mb-3">
                     <Form.Label>Correo electrónico</Form.Label>
-                    <Form.Control 
-                      type="email" 
-                      placeholder="Ingresa tu correo" 
+                    <Form.Control
+                      type="email"
+                      placeholder="Ingresa tu correo"
                       name="email"
-                      value={email} 
-                      onChange={onChange} 
-                      required 
+                      value={email}
+                      onChange={onChange}
+                      required
                       className="p-2"
                     />
                   </Form.Group>
                   <Form.Group controlId="formBasicPassword" className="mb-3">
                     <Form.Label>Contraseña</Form.Label>
-                    <Form.Control 
-                      type="password" 
-                      placeholder="Ingresa tu contraseña" 
+                    <Form.Control
+                      type="password"
+                      placeholder="Ingresa tu contraseña"
                       name="password"
-                      value={password} 
-                      onChange={onChange} 
-                      required 
+                      value={password}
+                      onChange={onChange}
+                      required
                       className="p-2"
                     />
                   </Form.Group>
-                  <Button variant="primary" type="submit" className="w-100 p-2 login-button" disabled={isLoading}>
+                  <Button variant="primary" type="submit" className="w-100 p-2" disabled={isLoading}>
                     {isLoading ? <Spinner animation="border" size="sm" /> : 'Login'}
                   </Button>
                 </Form>
                 <div className="text-center mt-3">
-                  <a 
-                    href="#" 
-                    className="text-decoration-none text-primary" 
+                  <a
+                    href="#"
+                    className="text-decoration-none text-primary"
                     onClick={() => setShowResetModal(true)} // ✅ Mostrar el modal al hacer clic
                   >
                     ¿Olvidaste tu contraseña?
